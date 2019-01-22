@@ -47,6 +47,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox Width="130" SelectedItem="{Binding FaceName}" ItemsSource="{x:Static cfg:Settings.lstFaceName}"/>
+
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
