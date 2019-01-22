@@ -14,9 +14,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Globalization;
+using System.Collections;
 
 namespace ConfigSetting
 {
+    [ValueConversion(typeof(IList), typeof(int))]
+    public sealed class ItemIndexConverter : FrameworkContentElement, IValueConverter
+    {
+        public Object Convert(Object data_item, Type t, Object p, CultureInfo _)
+        {
+            return ((IList)DataContext).IndexOf(data_item);
+        }
+            
+
+        public Object ConvertBack(Object o, Type t, Object p, CultureInfo _)
+        {
+            throw new NotImplementedException();
+        }
+    };
+
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
@@ -29,90 +46,53 @@ namespace ConfigSetting
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            Config.Settings.SaveToFile();
+            this.Close();   
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Close();
         }
 
         private void add_Click(object sender, RoutedEventArgs e)
         {
-
+            Config.Settings.lstFaceInfo.Insert(0, new FaceInfo() { FaceName = "未定义", Temperature = 100, Disc = "无" });
         }
 
         private void remove_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void lstview_MouseMove(object sender, MouseEventArgs e)
-        {
-            ListView listview = sender as ListView;
-            if (e.LeftButton == MouseButtonState.Pressed)
+            int index = lstview.SelectedIndex;
+            if (index >= 0 && index < lstview.Items.Count)
             {
-                System.Collections.IList list = listview.SelectedItems as System.Collections.IList;
-                DataObject data = new DataObject(typeof(System.Collections.IList), list);
-                if (list.Count > 0)
-                {
-                    DragDrop.DoDragDrop(listview, data, DragDropEffects.Move);
-                }
+                Config.Settings.lstFaceInfo.RemoveAt(index);
             }
         }
 
-        private void lstview_Drop(object sender, DragEventArgs e)
+        private void up_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(System.Collections.IList)))
+            int index = lstview.SelectedIndex;
+            if (index < lstview.Items.Count && (index-1)>=0)
             {
-                System.Collections.IList peopleList = e.Data.GetData(typeof(System.Collections.IList)) as System.Collections.IList;
-                //index为放置时鼠标下元素项的索引
-                int index = GetCurrentIndex(new GetPositionDelegate(e.GetPosition));
-                if (index > -1)
-                {
-                    FaceInfo Logmess = peopleList[0] as FaceInfo;
-                    //拖动元素集合的第一个元素索引
-                    int OldFirstIndex = Config.Settings.lstFaceInfo.IndexOf(Logmess);
-                    //下边那个循环要求数据源必须为ObservableCollection<T>类型，T为对象
-                    for (int i = 0; i < peopleList.Count; i++)
-                    {
-                        Config.Settings.lstFaceInfo.Move(OldFirstIndex, index);
-                    }
-                    lstview.SelectedItems.Clear();
-                }
+                Config.Settings.lstFaceInfo.Move(index, index - 1);
             }
+            lstview.Items.Refresh();
         }
 
-        private int GetCurrentIndex(GetPositionDelegate getPosition)
+        private void down_Click(object sender, RoutedEventArgs e)
         {
-            int index = -1;
-            for (int i = 0; i < lstview.Items.Count; ++i)
+            int index = lstview.SelectedIndex;
+            if (index >= 0 && (index + 1) <= lstview.Items.Count - 1)
             {
-                ListViewItem item = GetListViewItem(i);
-                if (item != null && this.IsMouseOverTarget(item, getPosition))
-                {
-                    index = i;
-                    break;
-                }
+                Config.Settings.lstFaceInfo.Move(index, index + 1);
             }
-            return index;
+            lstview.Items.Refresh();
         }
 
-        private bool IsMouseOverTarget(Visual target, GetPositionDelegate getPosition)
+        private void sort_Click(object sender, RoutedEventArgs e)
         {
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
-            Point mousePos = getPosition((IInputElement)target);
-            return bounds.Contains(mousePos);
-        }
-
-        delegate Point GetPositionDelegate(IInputElement element);
-
-        ListViewItem GetListViewItem(int index)
-        {
-            if (lstview.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
-                return null;
-            return lstview.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
-
+            Config.Settings.SortFaceInfoByTemperature();
+            //lstview.Items.Refresh();
         }
     }
 }

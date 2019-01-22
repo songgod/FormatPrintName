@@ -174,5 +174,15 @@ namespace Config
             WriteFormatFile(fmturl , lstFormat);
             WriteFaceFile(fnurl, lstFaceInfo);
         }
+
+        static public void SortFaceInfoByTemperature()
+        {
+            List<FaceInfo> res = new List<FaceInfo>(lstFaceInfo.OrderBy(s => s.Temperature));
+            lstFaceInfo.Clear();
+            foreach (var item in res)
+            {
+                lstFaceInfo.Add(item);
+            }
+        }
     }
 }
