@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenameSample", "RenameSampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrangeSample", "ArrangeSample\ArrangeSample.csproj", "{A888E3F7-093D-4BB8-9D65-AFB0798C5512}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigSetting", "ConfigSetting\ConfigSetting.csproj", "{2B70D415-2DC1-4126-877A-26487E8A23C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{A888E3F7-093D-4BB8-9D65-AFB0798C5512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A888E3F7-093D-4BB8-9D65-AFB0798C5512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A888E3F7-093D-4BB8-9D65-AFB0798C5512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B70D415-2DC1-4126-877A-26487E8A23C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B70D415-2DC1-4126-877A-26487E8A23C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B70D415-2DC1-4126-877A-26487E8A23C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B70D415-2DC1-4126-877A-26487E8A23C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
