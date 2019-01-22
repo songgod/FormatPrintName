@@ -1,11 +1,11 @@
-﻿<Window x:Class="Arrange.MainWindow"
+﻿<Window x:Class="ArrangeSample.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Arrange"
+        xmlns:local="clr-namespace:ArrangeSample"
         mc:Ignorable="d"
-        Title="米样统计" Height="350" Width="525">
+        Title="小样统计" Height="350" Width="525">
     <Grid>
         
     </Grid>

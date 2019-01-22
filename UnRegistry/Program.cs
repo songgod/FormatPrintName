@@ -14,6 +14,7 @@ namespace UnRegistry
             RegistryKey rootKey = Microsoft.Win32.Registry.ClassesRoot;
             rootKey.DeleteSubKeyTree("*\\shell\\PrintRename",false);
             rootKey.DeleteSubKeyTree("*\\shell\\PrintRenameSample", false);
+            rootKey.DeleteSubKeyTree("Directory\\shell\\ArrangePrint", false);
             rootKey.DeleteSubKeyTree("Directory\\shell\\ArrangePrintSample", false);
             rootKey.Close();
         }

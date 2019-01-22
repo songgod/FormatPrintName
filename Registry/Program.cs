@@ -44,8 +44,23 @@ namespace Registry
             if (!File.Exists(registApp))
                 return;
             RegistryKey rootKey = Microsoft.Win32.Registry.ClassesRoot;
+            RegistryKey appkey = rootKey.CreateSubKey("Directory\\shell\\ArrangePrint");
+            appkey.SetValue("", "米样统计");
+            appkey.SetValue("icon", registApp);
+            RegistryKey cmdkey = appkey.CreateSubKey("command");
+            cmdkey.SetValue("", registApp + " %1");
+            rootKey.Close();
+        }
+
+
+        static void RegistArrangeSample()
+        {
+            string registApp = Directory.GetCurrentDirectory() + "\\ArrangeSample.exe";
+            if (!File.Exists(registApp))
+                return;
+            RegistryKey rootKey = Microsoft.Win32.Registry.ClassesRoot;
             RegistryKey appkey = rootKey.CreateSubKey("Directory\\shell\\ArrangePrintSample");
-            appkey.SetValue("", "整理统计米样");
+            appkey.SetValue("", "小样统计");
             appkey.SetValue("icon", registApp);
             RegistryKey cmdkey = appkey.CreateSubKey("command");
             cmdkey.SetValue("", registApp + " %1");
@@ -57,6 +72,7 @@ namespace Registry
             RegistRename();
             RegistSample();
             RegistArrange();
+            RegistArrangeSample();
         }
     }
 }
