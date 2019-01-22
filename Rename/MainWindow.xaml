@@ -6,7 +6,7 @@
         xmlns:cfg="clr-namespace:Config;assembly=Config"
         xmlns:local="clr-namespace:Rename"
         mc:Ignorable="d"
-        Title="格式重命名" Height="262.481" Width="408.827" WindowStyle="ToolWindow">
+        Title="米样格式重命名" Height="281.924" Width="408.827" WindowStyle="ToolWindow">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -22,12 +22,12 @@
             <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="原文件名：" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBlock x:Name="orgName" Text="{Binding OrgName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBlock Text="格式:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <ComboBox x:Name="cmbFormat" ItemsSource="{x:Static cfg:Settings.lstFormat}" SelectedItem="{Binding Format, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="1" Grid.Column="1"/>
-        <TextBlock Text="描述:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox x:Name="tbDisc" Grid.Row="2" Grid.Column="1">
+        <TextBlock Text="原文件名：" Margin="1" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="orgName" Margin="1" Text="{Binding OrgName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="格式:" Margin="1" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <ComboBox x:Name="cmbFormat" Margin="1" ItemsSource="{x:Static cfg:Settings.lstFormat}" SelectedItem="{Binding Format, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="描述:" Margin="1" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox x:Name="tbDisc" Margin="1" Grid.Row="2" Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Disc" Source="{x:Static local:FileNameInfo.Instance}" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -36,10 +36,10 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <TextBlock Text="面料名称:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <ComboBox x:Name="cmbMLName" ItemsSource="{x:Static cfg:Settings.lstFaceName}" SelectedItem="{Binding FaceName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="3" Grid.Column="1"/>
-        <TextBlock Text="个数:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox x:Name="tbNum" Grid.Row="4" Grid.Column="1">
+        <TextBlock Text="面料名称:" Margin="1" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <ComboBox x:Name="cmbMLName" Margin="1" ItemsSource="{x:Static cfg:Settings.lstFaceName}" SelectedItem="{Binding FaceName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="3" Grid.Column="1"/>
+        <TextBlock Text="个数:" Margin="1" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox x:Name="tbNum" Margin="1" Grid.Row="4" Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Count" Source="{x:Static local:FileNameInfo.Instance}" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -48,8 +48,8 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <TextBlock Text="米数:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox x:Name="tbMeter" Grid.Row="5" Grid.Column="1">
+        <TextBlock Text="米数:" Margin="1" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox x:Name="tbMeter" Margin="1" Grid.Row="5" Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Meter" Source="{x:Static local:FileNameInfo.Instance}" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -59,9 +59,9 @@
             </TextBox.Text>
         </TextBox>
 
-        <TextBlock Text="新文件名:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBlock x:Name="newName" Text="{Binding NewName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right">
+        <TextBlock Text="新文件名:" Margin="1" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="newName" Margin="1" Text="{Binding NewName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+        <StackPanel Orientation="Horizontal" Margin="1" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right">
             <Button Content="确定" Width="100" Click="Button_Click" HorizontalAlignment="Center" Margin="2"/>
             <Button Content="取消" Width="100" x:Name="cancel" Click="cancel_Click" HorizontalAlignment="Right" Margin="2"/>
         </StackPanel>

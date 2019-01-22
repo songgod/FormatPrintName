@@ -3,10 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cfg="clr-namespace:Config;assembly=Config"
         xmlns:local="clr-namespace:RenameSample"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="小样格式重命名" Height="350" Width="525">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Margin="1" Text="原文件名：" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Margin="1" x:Name="orgName" Text="{Binding OrgName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Margin="1" Text="格式:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <ComboBox Margin="1" x:Name="cmbFormat" ItemsSource="{x:Static cfg:Settings.lstFormat}" SelectedItem="{Binding Format, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Margin="1" Text="描述:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox Margin="1" x:Name="tbDisc" Grid.Row="2" Grid.Column="1">
+            <TextBox.Text>
+                <Binding Path="Disc" Source="{x:Static local:FileNameInfo.Instance}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:StringValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBlock Margin="1" Text="面料:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <ComboBox Margin="1" x:Name="cmbMLName" ItemsSource="{x:Static cfg:Settings.lstFaceName}" SelectedItem="{Binding FaceName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="3" Grid.Column="1"/>
+        <TextBlock Margin="1" Text="新文件名:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Margin="1" x:Name="newName" FontWeight="Bold" Text="{Binding NewName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <StackPanel Margin="1" Orientation="Horizontal" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right">
+            <Button Content="确定" Width="100" Click="Button_Click" HorizontalAlignment="Center" Margin="2"/>
+            <Button Content="取消" Width="100" x:Name="cancel" Click="cancel_Click" HorizontalAlignment="Right" Margin="2"/>
+        </StackPanel>
+
     </Grid>
 </Window>

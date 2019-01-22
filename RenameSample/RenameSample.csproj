@@ -37,7 +37,11 @@
   <PropertyGroup>
     <ApplicationIcon>rename_60px_28848_easyicon.net.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>RenameSample.MainApp</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -66,6 +70,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileNameInfo.cs" />
+    <Compile Include="InputValidation.cs" />
+    <Compile Include="MainApp.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -100,6 +107,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="rename_60px_28848_easyicon.net.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Config\Config.csproj">
+      <Project>{dca5b99e-b020-44bc-8813-6036393da4c7}</Project>
+      <Name>Config</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
