@@ -6,7 +6,7 @@
         xmlns:cfg="clr-namespace:Config;assembly=Config"
         xmlns:local="clr-namespace:RenameSample"
         mc:Ignorable="d"
-        Title="小样格式重命名" Height="350" Width="525">
+        Title="小样格式重命名" Height="350" Width="450">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
