@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,11 +10,52 @@ using System.Windows;
 
 namespace RenameSample
 {
+    public class FaceNameCount : DependencyObject
+    {
+        private static void OnFaceNameCountChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs arg)
+        {
+            FileNameInfo.Instance.UpdateNewName();
+        }
+
+        public string FaceName
+        {
+            get { return (string)GetValue(FaceNameProperty); }
+            set { SetValue(FaceNameProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FaceName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FaceNameProperty =
+            DependencyProperty.Register("FaceName", typeof(string), typeof(FaceNameCount), new PropertyMetadata("", new PropertyChangedCallback(OnFaceNameCountChangedCallback)));
+
+
+
+        public int Count
+        {
+            get { return (int)GetValue(CountProperty); }
+            set { SetValue(CountProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Count.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CountProperty =
+            DependencyProperty.Register("Count", typeof(int), typeof(FaceNameCount), new PropertyMetadata(1, new PropertyChangedCallback(OnFaceNameCountChangedCallback)));
+
+
+    }
+
+    public class FaceNameCounts : ObservableCollection<FaceNameCount>
+    {
+
+    }
+
     public class FileNameInfo : DependencyObject
     {
         public static FileNameInfo Instance { get; set; }
 
-
+        public FileNameInfo()
+        {
+            FaceNameCounts = new FaceNameCounts();
+            FaceNameCounts.CollectionChanged += FaceNameCounts_CollectionChanged;
+        }
 
         public string OrgFullName
         {
@@ -31,7 +73,6 @@ namespace RenameSample
             string fullname = owner.OrgFullName;
             owner.OrgName = Path.GetFileName(fullname);
             owner.Format = Config.Settings.lstFormat.Count==0 ? "" : Config.Settings.lstFormat[0];
-            owner.FaceName = Config.Settings.lstFaceName.Count == 0 ? "" : Config.Settings.lstFaceName[0];
         }
 
 
@@ -49,7 +90,32 @@ namespace RenameSample
         private static void OnRefInfoChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs arg)
         {
             FileNameInfo owner = (FileNameInfo)obj;
-            owner.NewName = owner.Format + "-" + owner.Disc + "-" + owner.FaceName + "-" + owner.Meter + "(米)-" + owner.Count + "(个)" + Path.GetExtension(owner.OrgFullName);
+            owner.UpdateNewName();
+        }
+
+        private void FaceNameCounts_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            UpdateNewName();
+        }
+
+        public void UpdateNewName()
+        {
+            string name = "小样-";
+            name += Format;
+            name += "-";
+            name += Disc;
+            name += "-";
+            foreach (var item in FaceNameCounts)
+            {
+                name += item.FaceName;
+                name += "(";
+                name += item.Count.ToString();
+                name += ")个";
+                if (FaceNameCounts.Last() != item)
+                    name += "-";
+            }
+            name += Path.GetExtension(OrgFullName);
+            NewName = name;
         }
 
         public string Format
@@ -76,39 +142,16 @@ namespace RenameSample
 
 
 
-        public string FaceName
+
+        public FaceNameCounts FaceNameCounts
         {
-            get { return (string)GetValue(FaceNameProperty); }
-            set { SetValue(FaceNameProperty, value); }
+            get { return (FaceNameCounts)GetValue(FaceNameCountsProperty); }
+            set { SetValue(FaceNameCountsProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for FaceName.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FaceNameProperty =
-            DependencyProperty.Register("FaceName", typeof(string), typeof(FileNameInfo), new PropertyMetadata("", new PropertyChangedCallback(OnRefInfoChangedCallback)));
-
-
-
-        public float Meter
-        {
-            get { return (float)GetValue(MeterProperty); }
-            set { SetValue(MeterProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Meter.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MeterProperty =
-            DependencyProperty.Register("Meter", typeof(float), typeof(FileNameInfo), new PropertyMetadata(6.0f, new PropertyChangedCallback(OnRefInfoChangedCallback)));
-
-
-
-        public int Count
-        {
-            get { return (int)GetValue(CountProperty); }
-            set { SetValue(CountProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Count.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CountProperty =
-            DependencyProperty.Register("Count", typeof(int), typeof(FileNameInfo), new PropertyMetadata(1, new PropertyChangedCallback(OnRefInfoChangedCallback)));
+        // Using a DependencyProperty as the backing store for FaceNameCounts.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FaceNameCountsProperty =
+            DependencyProperty.Register("FaceNameCounts", typeof(FaceNameCounts), typeof(FileNameInfo), new PropertyMetadata(null, new PropertyChangedCallback(OnRefInfoChangedCallback)));
 
 
 
