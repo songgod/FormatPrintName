@@ -24,6 +24,7 @@ namespace Arrange
         public MainWindow()
         {
             InitializeComponent();
+            lstbox.Items.Add("正在处理...");
             Processor.Instance.OnLog += Instance_OnLog;
         }
 
@@ -31,14 +32,6 @@ namespace Arrange
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-            Processor.Instance.Process();
         }
 
         private void Instance_OnLog(string str)
@@ -56,6 +49,11 @@ namespace Arrange
         private void OpenExcel_Click(object sender, RoutedEventArgs e)
         {
             Processor.Instance.OpenExcel();
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            Processor.Instance.Process();
         }
     }
 }

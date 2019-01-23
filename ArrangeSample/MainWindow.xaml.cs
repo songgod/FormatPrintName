@@ -23,18 +23,15 @@ namespace ArrangeSample
     {
         public MainWindow()
         {
-            InitializeComponent();
             Processor.Instance.OnLog += Instance_OnLog;
+            InitializeComponent();
+            lstbox.Items.Add("正在处理...");
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            Processor.Instance.Process();
         }
 
         private void Instance_OnLog(string str)
@@ -52,6 +49,11 @@ namespace ArrangeSample
         private void OpenExcel_Click(object sender, RoutedEventArgs e)
         {
             Processor.Instance.OpenExcel();
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            Processor.Instance.Process();
         }
     }
 }
