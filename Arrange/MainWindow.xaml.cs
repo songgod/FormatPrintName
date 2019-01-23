@@ -24,6 +24,7 @@ namespace Arrange
         public MainWindow()
         {
             InitializeComponent();
+            Processor.Instance.OnLog += Instance_OnLog;
         }
 
 
@@ -36,7 +37,7 @@ namespace Arrange
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Processor.Instance.OnLog += Instance_OnLog;
+            
             Processor.Instance.Process();
         }
 
@@ -47,8 +48,7 @@ namespace Arrange
 
         private void LoadLog(string log)
         {
-            Processor.Instance.Logs.Add(log);
-            //Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadNumberDelegate(LoadNumber), ++number);
+            lstbox.Items.Add(log);
         }
 
         private delegate void LoadLogDelegate(string str);

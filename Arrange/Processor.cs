@@ -29,7 +29,6 @@ namespace Arrange
 
         public Processor()
         {
-            Logs = new ObservableCollection<string>();
             FacePathTuples = new List<Tuple<string, List<string>, List<float>, List<string>>>();
         }
 
@@ -45,16 +44,7 @@ namespace Arrange
 
         public string ExcelUrl { get; set; }
 
-        public ObservableCollection<string> Logs
-        {
-            get { return (ObservableCollection<string>)GetValue(LogsProperty); }
-            set { SetValue(LogsProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Logs.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LogsProperty =
-            DependencyProperty.Register("Logs", typeof(ObservableCollection<string>), typeof(Processor), new PropertyMetadata(null));
-
+       
         public List<Tuple<string,List<string>,List<float>,List<string>>> FacePathTuples { get; set; }
 
         private void GetAllFiles(string dir, ref List<string> files)
@@ -84,11 +74,17 @@ namespace Arrange
             fi.Facename = strs[2];
             float f = 0.0f;
             if (!float.TryParse(strs[3].Substring(0,strs[3].IndexOf('(')), out f))
+            {
+                Log(filename + "不符合命名规则");
                 return false;
+            }
             fi.Meter = f;
             int i = 0;
             if (!int.TryParse(strs[4].Substring(0, strs[4].IndexOf('(')), out i))
+            {
+                Log(filename + "不符合命名规则");
                 return false;
+            }
             fi.Count = i;
             return true;
         }
@@ -177,10 +173,6 @@ namespace Arrange
                         Log("文件" + f + "的面料类型没有定义");
                     }
                 }
-                else
-                {
-                    Log("文件" + f + "不符合米样命名规则");
-                }
             }
 
             if (nCount == 0)
@@ -221,7 +213,7 @@ namespace Arrange
                 try
                 {
                     my.FileSystem.RenameFile(oldname, newname);
-                    Log("重名名 " + Path.GetFileName(oldname) + " 为 "+Path.GetFileName(newname));
+                    Log("重命名 " + Path.GetFileName(oldname) + " 为 "+Path.GetFileName(newname));
                     break;
                 }
                 catch (Exception e)

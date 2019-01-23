@@ -20,13 +20,15 @@ namespace ArrangeSample
         public List<Tuple<string,int>> FaceNameCount { get; set; }
     }
 
+
+    public delegate void Log(string str);
+
     public class Processor : DependencyObject
     {
         public static Processor Instance { get; set; }
 
         public Processor()
         {
-            Logs = new ObservableCollection<string>();
         }
 
         public string Url
@@ -39,17 +41,6 @@ namespace ArrangeSample
         public static readonly DependencyProperty UrlProperty =
             DependencyProperty.Register("Url", typeof(string), typeof(Processor), new PropertyMetadata(""));
 
-
-
-        public ObservableCollection<string> Logs
-        {
-            get { return (ObservableCollection<string>)GetValue(LogsProperty); }
-            set { SetValue(LogsProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Logs.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LogsProperty =
-            DependencyProperty.Register("Logs", typeof(ObservableCollection<string>), typeof(Processor), new PropertyMetadata(null));
 
         public string ExcelUrl1 { get; set; }
         public string ExcelUrl2 { get; set; }
@@ -66,6 +57,14 @@ namespace ArrangeSample
             {
                 GetAllFiles(tdir, ref files);
             }
+        }
+
+        public event Log OnLog;
+
+        private void Log(string str)
+        {
+            if (OnLog != null)
+                OnLog.Invoke(str);
         }
 
         private bool ParseFileName(string filename, out FileInfo fi)
@@ -89,8 +88,11 @@ namespace ArrangeSample
                 int lindex = strs[i].IndexOf(')');
                 string strcount = strs[i].Substring(findex + 1, lindex - findex - 1);
                 int count = 0;
-                if (!int.TryParse(strcount, out count))
+                if (string.IsNullOrWhiteSpace(facename) || !int.TryParse(strcount, out count))
+                {
+                    Log(filename + "不符合命名规则");
                     return false;
+                }
                 fi.FaceNameCount.Add(new Tuple<string, int>(facename, count));
             }
             
@@ -99,16 +101,16 @@ namespace ArrangeSample
 
         public void Process()
         {
-            Logs.Add("查找文件...");
+            Log("查找文件...");
             List<string> files = new List<string>();
             GetAllFiles(Url, ref files);
             if (files.Count == 0)
             {
-                Logs.Add("没有找到文件，结束");
+                Log("没有找到文件，结束");
                 return;
             }
 
-            Logs.Add("查找小样文件...");
+            Log("查找小样文件...");
 
             List<FileInfo> fileinfos = new List<FileInfo>();
             int totalindex = 1;
@@ -122,19 +124,15 @@ namespace ArrangeSample
                     fileinfos.Add(fi);
                     totalindex++;
                 }
-                else
-                {
-                    Logs.Add("文件" + f + "不符合小样命名规则");
-                }
             }
 
             if (fileinfos.Count == 0)
             {
-                Logs.Add("没有找到米样文件，结束");
+                Log("没有找到米样文件，结束");
                 return;
             }
 
-            Logs.Add("找到" + fileinfos.Count.ToString() + "个小样文件，开始重命名...");
+            Log("找到" + fileinfos.Count.ToString() + "个小样文件，开始重命名...");
             
             foreach (var item in fileinfos)
             {
@@ -142,9 +140,9 @@ namespace ArrangeSample
                 Rename(item.Url, newname);
             }
 
-            Logs.Add("重命名结束...");
+            Log("重命名结束...");
 
-            Logs.Add("导出Excel文件...");
+            Log("导出Excel文件...");
             {
                 ExcelEdit ed = new ExcelEdit();
                 ed.Create();
@@ -193,7 +191,7 @@ namespace ArrangeSample
                         }
                         else
                         {
-                            Logs.Add("文件" + item.Url + "的面料类型"+fn.Item1+"没有定义");
+                            Log("文件" + item.Url + "的面料类型"+fn.Item1+"没有定义");
                         }
                     }
                 }
@@ -228,7 +226,7 @@ namespace ArrangeSample
                 ed.Close();
             }
 
-            Logs.Add("导出Excel文件结束");
+            Log("导出Excel文件结束");
         }
 
         private bool Rename(string oldname, string newname)
@@ -241,7 +239,7 @@ namespace ArrangeSample
                 try
                 {
                     my.FileSystem.RenameFile(oldname, newname);
-                    Logs.Add("重名名 " + Path.GetFileName(oldname) + " 为 " + Path.GetFileName(newname));
+                    Log("重命名 " + Path.GetFileName(oldname) + " 为 " + Path.GetFileName(newname));
                     break;
                 }
                 catch (Exception e)

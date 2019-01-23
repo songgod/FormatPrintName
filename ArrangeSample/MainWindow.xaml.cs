@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ArrangeSample
 {
@@ -23,6 +24,7 @@ namespace ArrangeSample
         public MainWindow()
         {
             InitializeComponent();
+            Processor.Instance.OnLog += Instance_OnLog;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -34,6 +36,18 @@ namespace ArrangeSample
         {
             Processor.Instance.Process();
         }
+
+        private void Instance_OnLog(string str)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLogDelegate(LoadLog), str);
+        }
+
+        private void LoadLog(string log)
+        {
+            lstbox.Items.Add(log);
+        }
+
+        private delegate void LoadLogDelegate(string str);
 
         private void OpenExcel_Click(object sender, RoutedEventArgs e)
         {
