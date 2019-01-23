@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Arrange
 {
@@ -35,6 +36,7 @@ namespace Arrange
         {
             Processor.Instance.Process();
         }
+        
 
         private void OpenExcel_Click(object sender, RoutedEventArgs e)
         {

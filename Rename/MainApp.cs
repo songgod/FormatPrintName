@@ -18,7 +18,7 @@ namespace Rename
                 file += " ";
                 file += args[i];
             }
-            file.TrimEnd();
+            file = file.Trim();
             if (!File.Exists(file))
                 return;
             FileNameInfo.Instance = new FileNameInfo() { OrgFullName = file };

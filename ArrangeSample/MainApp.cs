@@ -15,10 +15,10 @@ namespace ArrangeSample
             string dir = "";
             for (int i = 0; i < args.Count(); i++)
             {
-                dir += " ";
                 dir += args[i];
+                dir += " ";
             }
-            dir.Trim();
+            dir = dir.TrimEnd();
             if (!Directory.Exists(dir))
                 return;
             Processor.Instance = new Processor() { Url = dir };
