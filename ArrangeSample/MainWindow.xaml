@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArrangeSample"
         mc:Ignorable="d"
-        Title="小样统计" Height="350" Width="525">
-    <Grid>
-        
+        Title="小样统计" Height="226.427" Width="348.15" WindowStyle="ToolWindow">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="24"/>
+        </Grid.RowDefinitions>
+        <ListBox Margin="1" Grid.Row="0" ItemsSource="{Binding Logs, Source={x:Static local:Processor.Instance}}"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="1" HorizontalAlignment="Right">
+            <Button x:Name="OpenExcel" Content="打开Excel" Width="100" Click="OpenExcel_Click" HorizontalAlignment="Center" Margin="1"/>
+            <Button  Margin="1" Width="100" HorizontalAlignment="Right" Content="关闭" Click="Button_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

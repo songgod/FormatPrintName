@@ -24,5 +24,21 @@ namespace Arrange
         {
             InitializeComponent();
         }
+
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Processor.Instance.Process();
+        }
+
+        private void OpenExcel_Click(object sender, RoutedEventArgs e)
+        {
+            Processor.Instance.OpenExcel();
+        }
     }
 }

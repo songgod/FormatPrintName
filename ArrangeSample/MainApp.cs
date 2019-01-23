@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,16 @@ namespace ArrangeSample
         [STAThread]
         public static void Main(string[] args)
         {
-            if (args.Count() != 1)
+            string dir = "";
+            for (int i = 0; i < args.Count(); i++)
+            {
+                dir += " ";
+                dir += args[i];
+            }
+            dir.TrimEnd();
+            if (!Directory.Exists(dir))
                 return;
-            //FileNameInfo.Instance = new FileNameInfo() { OrgFullName = args[0] };
+            Processor.Instance = new Processor() { Url = dir };
             App app = new App();
             app.InitializeComponent();
             app.Run();
