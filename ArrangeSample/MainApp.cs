@@ -18,7 +18,7 @@ namespace ArrangeSample
                 dir += " ";
                 dir += args[i];
             }
-            dir.TrimEnd();
+            dir.Trim();
             if (!Directory.Exists(dir))
                 return;
             Processor.Instance = new Processor() { Url = dir };

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Arrange"
         Loaded="Window_Loaded"
         mc:Ignorable="d"
-        Title="米样统计" Height="226.427" Width="348.15" WindowStyle="ToolWindow">
+        Title="米样统计" Height="406.995" Width="679.909" WindowStyle="ToolWindow">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

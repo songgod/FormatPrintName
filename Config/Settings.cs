@@ -137,29 +137,30 @@ namespace Config
 
         static private void WriteFormatFile(string file, ObservableCollection<string> info)
         {
-            FileInfo fileinfo = new FileInfo(file);
-            FileStream filestream = fileinfo.Create();
-            StreamWriter witer = new StreamWriter(filestream);
+            FileStream fs = new FileStream(file, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs, Encoding.Default);
+            
             foreach (var l in info)
             {
-                witer.WriteLine(l);
-                witer.Flush();
+                sw.WriteLine(l);
             }
-            witer.Close();
+            sw.Flush();
+            sw.Close();
+            fs.Close();
         }
 
         static private void WriteFaceFile(string file, ObservableCollection<FaceInfo> info)
         {
-            FileInfo fileinfo = new FileInfo(file);
-            FileStream filestream = fileinfo.Create();
-            StreamWriter witer = new StreamWriter(filestream);
+            FileStream fs = new FileStream(file, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs, Encoding.Default);
             foreach (var l in info)
             {
                 string s = l.FaceName + " " + l.Temperature + " " + l.Disc;
-                witer.WriteLine(s);
-                witer.Flush();
+                sw.WriteLine(s);
             }
-            witer.Close();
+            sw.Flush();
+            sw.Close();
+            fs.Close();
         }
 
         static public void SaveToFile()
