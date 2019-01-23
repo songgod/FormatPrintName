@@ -32,11 +32,26 @@ namespace Arrange
             this.Close();
         }
 
+
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Processor.Instance.OnLog += Instance_OnLog;
             Processor.Instance.Process();
         }
-        
+
+        private void Instance_OnLog(string str)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadLogDelegate(LoadLog), str);
+        }
+
+        private void LoadLog(string log)
+        {
+            Processor.Instance.Logs.Add(log);
+            //Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadNumberDelegate(LoadNumber), ++number);
+        }
+
+        private delegate void LoadLogDelegate(string str);
 
         private void OpenExcel_Click(object sender, RoutedEventArgs e)
         {

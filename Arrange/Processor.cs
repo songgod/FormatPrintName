@@ -21,6 +21,8 @@ namespace Arrange
         public int Count { get; set; }
     }
 
+    public delegate void Log(string str);
+
     public class Processor : DependencyObject
     {
         public static Processor Instance { get; set; }
@@ -90,7 +92,14 @@ namespace Arrange
             fi.Count = i;
             return true;
         }
-        
+
+        public event Log OnLog;
+
+        private void Log(string str)
+        {
+            if (OnLog != null)
+                OnLog.Invoke(str);
+        }
 
         public void Process()
         {
@@ -101,7 +110,7 @@ namespace Arrange
 
         private void ProcessExcel()
         {
-            Logs.Add("导出Excel文件...");
+            Log("导出Excel文件...");
             ExcelEdit ed = new ExcelEdit();
             ed.Create();
             int index = 1;
@@ -129,21 +138,21 @@ namespace Arrange
             ExcelUrl = Url + "\\" + excelname + ".xlsx";
             ed.SaveAs(ExcelUrl);
             ed.Close();
-            Logs.Add("导出Excel文件结束");
+            Log("导出Excel文件结束");
         }
 
         private bool ProcessRename()
         {
-            Logs.Add("查找文件...");
+            Log("查找文件...");
             List<string> files = new List<string>();
             GetAllFiles(Url, ref files);
             if (files.Count == 0)
             {
-                Logs.Add("没有找到文件，结束");
+                Log("没有找到文件，结束");
                 return false;
             }
 
-            Logs.Add("查找米样文件...");
+            Log("查找米样文件...");
             int nCount = Config.Settings.lstFaceInfo.Count;
             for (int i = 0; i < nCount; i++)
             {
@@ -165,22 +174,22 @@ namespace Arrange
                     }
                     else
                     {
-                        Logs.Add("文件" + f + "的面料类型没有定义");
+                        Log("文件" + f + "的面料类型没有定义");
                     }
                 }
                 else
                 {
-                    Logs.Add("文件" + f + "不符合米样命名规则");
+                    Log("文件" + f + "不符合米样命名规则");
                 }
             }
 
             if (nCount == 0)
             {
-                Logs.Add("没有找到米样文件，结束");
+                Log("没有找到米样文件，结束");
                 return false;
             }
 
-            Logs.Add("找到" + nCount.ToString() + "个米样文件，开始重命名...");
+            Log("找到" + nCount.ToString() + "个米样文件，开始重命名...");
             int totalindex = 1;
             foreach (var item in FacePathTuples)
             {
@@ -197,7 +206,7 @@ namespace Arrange
                 }
             }
 
-            Logs.Add("重命名结束...");
+            Log("重命名结束...");
 
             return true;
         }
@@ -212,7 +221,7 @@ namespace Arrange
                 try
                 {
                     my.FileSystem.RenameFile(oldname, newname);
-                    Logs.Add("重名名 " + Path.GetFileName(oldname) + " 为 "+Path.GetFileName(newname));
+                    Log("重名名 " + Path.GetFileName(oldname) + " 为 "+Path.GetFileName(newname));
                     break;
                 }
                 catch (Exception e)
