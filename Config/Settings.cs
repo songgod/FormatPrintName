@@ -14,6 +14,18 @@ namespace Config
     {
 
 
+        public int Index
+        {
+            get { return (int)GetValue(IndexProperty); }
+            set { SetValue(IndexProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Index.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IndexProperty =
+            DependencyProperty.Register("Index", typeof(int), typeof(FaceInfo), new PropertyMetadata(0));
+
+
+
         public string FaceName
         {
             get { return (string)GetValue(FaceNameProperty); }
@@ -116,13 +128,14 @@ namespace Config
                 while (!string.IsNullOrWhiteSpace(l))
                 {
                     string[] strs = l.Split(' ');
-                    if(strs.Count()==3)
+                    if(strs.Count()==4)
                     {
                         float d = 0.0f;
-                        if(float.TryParse(strs[1],out d))
+                        int id = 0;
+                        if(int.TryParse(strs[0], out id) && float.TryParse(strs[2],out d))
                         {
-                            lstFaceName.Add(strs[0]);
-                            lstFaceInfo.Add(new FaceInfo() { FaceName = strs[0], Temperature=d, Disc = strs[2]});
+                            lstFaceName.Add(strs[1]);
+                            lstFaceInfo.Add(new FaceInfo() { Index=id, FaceName = strs[1], Temperature=d, Disc = strs[3]});
                         }
                     }
                     l = reader.ReadLine();
@@ -155,7 +168,7 @@ namespace Config
             StreamWriter sw = new StreamWriter(fs, Encoding.Default);
             foreach (var l in info)
             {
-                string s = l.FaceName + " " + l.Temperature + " " + l.Disc;
+                string s = l.Index + " " + l.FaceName + " " + l.Temperature + " " + l.Disc;
                 sw.WriteLine(s);
             }
             sw.Flush();

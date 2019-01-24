@@ -88,11 +88,5 @@ namespace ConfigSetting
             }
             lstview.Items.Refresh();
         }
-
-        private void sort_Click(object sender, RoutedEventArgs e)
-        {
-            Config.Settings.SortFaceInfoByTemperature();
-            //lstview.Items.Refresh();
-        }
     }
 }

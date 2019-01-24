@@ -14,7 +14,8 @@ namespace RenameSample
     {
         private static void OnFaceNameCountChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs arg)
         {
-            FileNameInfo.Instance.UpdateNewName();
+            if(FileNameInfo.Instance!=null)
+                FileNameInfo.Instance.UpdateNewName();
         }
 
         public string FaceName
@@ -70,9 +71,33 @@ namespace RenameSample
         private static void OnOrgFullNameChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs arg)
         {
             FileNameInfo owner = (FileNameInfo)obj;
-            string fullname = owner.OrgFullName;
-            owner.OrgName = Path.GetFileName(fullname);
-            owner.Format = Config.Settings.lstFormat.Count==0 ? "" : Config.Settings.lstFormat[0];
+            
+            owner.OrgName = Path.GetFileName(owner.OrgFullName);
+            var strs = owner.OrgName.Split('-');
+            if(strs.Count()>=3 && strs[0]=="小样")
+            {
+                owner.Format = strs[1];
+                owner.Disc = strs[2];
+                for (int i = 3; i < strs.Count(); i++)
+                {
+                    string fnc = strs[i];
+                    int sindex = fnc.IndexOf('(');
+                    int eindex = fnc.IndexOf(')');
+                    if(sindex>0 && eindex >0 && sindex<eindex)
+                    {
+                        string sfn = fnc.Substring(0, sindex);
+                        string sc = fnc.Substring(sindex + 1, eindex - sindex - 1);
+                        int ncount = 0;
+                        if(int.TryParse(sc,out ncount) && ncount>0)
+                            owner.FaceNameCounts.Add(new FaceNameCount() { FaceName = sfn, Count = ncount });
+                    }
+                }
+                owner.UpdateNewName();
+            }
+            else
+            {
+                owner.Format = Config.Settings.lstFormat.Count == 0 ? "" : Config.Settings.lstFormat[0];
+            }
         }
 
 

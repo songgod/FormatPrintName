@@ -30,8 +30,23 @@ namespace Rename
             FileNameInfo owner = (FileNameInfo)obj;
             string fullname = owner.OrgFullName;
             owner.OrgName = Path.GetFileName(fullname);
-            owner.Format = Config.Settings.lstFormat.Count==0 ? "" : Config.Settings.lstFormat[0];
-            owner.FaceName = Config.Settings.lstFaceName.Count == 0 ? "" : Config.Settings.lstFaceName[0];
+            var strs = owner.OrgName.Split('-');
+            if(strs.Count()==5)
+            {
+                owner.Format = strs[0];
+                owner.Disc = strs[1];
+                owner.FaceName = strs[2];
+                int ncount = 1;
+                int.TryParse(strs[3].Substring(0, strs[3].IndexOf('(')), out ncount);
+                owner.Count = ncount;
+                float fmeter = 0.0f;
+                float.TryParse(strs[4].Substring(0, strs[4].IndexOf('(')), out fmeter);
+                owner.Meter = fmeter / ncount;
+            }
+            else
+            {
+                owner.Format = Config.Settings.lstFormat.Count == 0 ? "" : Config.Settings.lstFormat[0];
+            }
         }
 
 
@@ -49,7 +64,7 @@ namespace Rename
         private static void OnRefInfoChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs arg)
         {
             FileNameInfo owner = (FileNameInfo)obj;
-            owner.NewName = owner.Format + "-" + owner.Disc + "-" + owner.FaceName + "-" + owner.Meter + "(米)-" + owner.Count + "(个)" + Path.GetExtension(owner.OrgFullName);
+            owner.NewName = owner.Format + "-" + owner.Disc + "-" + owner.FaceName + "-" + owner.Count + "(个)-" + owner.Meter*owner.Count + "(米)" + Path.GetExtension(owner.OrgFullName);
         }
 
         public string Format

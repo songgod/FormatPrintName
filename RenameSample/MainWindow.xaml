@@ -46,8 +46,15 @@
                         <GridViewColumn Header="面料名称" Width="150">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ComboBox Width="130" SelectedItem="{Binding FaceName}" ItemsSource="{x:Static cfg:Settings.lstFaceName}"/>
-
+                                    <TextBox Width="130">
+                                        <TextBox.Text>
+                                            <Binding Path="FaceName" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding.ValidationRules>
+                                                    <local:MLNameValidationRule ValidatesOnTargetUpdated="True"/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

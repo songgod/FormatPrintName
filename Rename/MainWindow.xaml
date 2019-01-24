@@ -37,7 +37,15 @@
             </TextBox.Text>
         </TextBox>
         <TextBlock Text="面料名称:" Margin="1" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <ComboBox x:Name="cmbMLName" Margin="1" ItemsSource="{x:Static cfg:Settings.lstFaceName}" SelectedItem="{Binding FaceName, Source={x:Static local:FileNameInfo.Instance}}" Grid.Row="3" Grid.Column="1"/>
+        <TextBox x:Name="tbMLName" Margin="1" Grid.Row="3" Grid.Column="1">
+            <TextBox.Text>
+                <Binding Path="FaceName" Source="{x:Static local:FileNameInfo.Instance}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:MLNameValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
         <TextBlock Text="个数:" Margin="1" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbNum" Margin="1" Grid.Row="4" Grid.Column="1">
             <TextBox.Text>
@@ -51,7 +59,7 @@
         <TextBlock Text="米数:" Margin="1" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbMeter" Margin="1" Grid.Row="5" Grid.Column="1">
             <TextBox.Text>
-                <Binding Path="Meter" Source="{x:Static local:FileNameInfo.Instance}" UpdateSourceTrigger="PropertyChanged">
+                <Binding Path="Meter" Source="{x:Static local:FileNameInfo.Instance}" StringFormat="{}{0:F2}" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <local:FloatValidationRule ValidatesOnTargetUpdated="True"/>
                     </Binding.ValidationRules>

@@ -42,7 +42,7 @@ namespace RenameSample
             FileNameInfo.Instance.FaceNameCounts.Add(
                 new FaceNameCount()
                 {
-                    FaceName = Config.Settings.lstFaceName.Count == 0 ? "" : Config.Settings.lstFaceName[0],
+                    FaceName = "",
                     Count = 1
                 }
             );

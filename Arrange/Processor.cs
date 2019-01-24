@@ -16,7 +16,7 @@ namespace Arrange
     {
         public string Format { get; set; }
         public string Disc { get; set; }
-        public string Facename { get; set; }
+        public string Indexname { get; set; }
         public float Meter { get; set; }
         public int Count { get; set; }
     }
@@ -29,7 +29,7 @@ namespace Arrange
 
         public Processor()
         {
-            FacePathTuples = new List<Tuple<string, List<string>, List<float>, List<string>>>();
+            FacePathTuples = new List<Tuple<string, string, List<string>, List<string>, List<float>, List<string>>>();
         }
 
         public string Url
@@ -45,7 +45,8 @@ namespace Arrange
         public string ExcelUrl { get; set; }
 
        
-        public List<Tuple<string,List<string>,List<float>,List<string>>> FacePathTuples { get; set; }
+        // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
+        public List<Tuple<string,string, List<string>, List<string>,List<float>,List<string>>> FacePathTuples { get; set; }
 
         private void GetAllFiles(string dir, ref List<string> files)
         {
@@ -61,26 +62,40 @@ namespace Arrange
             }
         }
 
-        private bool ParseFileName(string filename, out FileInfo fi)
+        private bool ParseFileName(string filename, out FileInfo fi, out string regname)
         {
             fi = new FileInfo();
+            regname = filename;
             var strs = filename.Split('-');
-            if (strs.Count() != 5)
+            if (strs.Count() != 5 || strs[0]=="小样")
             {
-                return false;
+                if(strs.Count()==6)
+                {
+                    string strtu = strs[0].Substring(0, 1);
+                    if (strtu == "图")
+                    {
+                        int sindex = filename.IndexOf('-');
+                        regname = filename.Substring(sindex + 1, filename.Count() - sindex - 1);
+                        strs = regname.Split('-');
+                    }
+                    else
+                        return false;
+                }
+                else
+                    return false;
             }
             fi.Format = strs[0];
             fi.Disc = strs[1];
-            fi.Facename = strs[2];
+            fi.Indexname = strs[2];
             float f = 0.0f;
-            if (!float.TryParse(strs[3].Substring(0,strs[3].IndexOf('(')), out f))
+            if (!float.TryParse(strs[4].Substring(0,strs[4].IndexOf('(')), out f))
             {
                 Log(filename + "不符合命名规则");
                 return false;
             }
             fi.Meter = f;
             int i = 0;
-            if (!int.TryParse(strs[4].Substring(0, strs[4].IndexOf('(')), out i))
+            if (!int.TryParse(strs[3].Substring(0, strs[3].IndexOf('(')), out i))
             {
                 Log(filename + "不符合命名规则");
                 return false;
@@ -115,15 +130,16 @@ namespace Arrange
             ed.SetCellValue("Sheet1", index, 2, "图序号范围");
             ed.SetCellValue("Sheet1", index, 3, "总米数");
             index++;
+            // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
             foreach (var item in FacePathTuples)
             {
-                if (item.Item2.Count == 0)
+                if (item.Item3.Count == 0)
                     continue;
                 ed.SetCellValue("Sheet1", index, 1, item.Item1);
-                string strnumrange = item.Item4.Count>=2 ? item.Item4.First()+"-"+item.Item4.Last() : item.Item4[0];
+                string strnumrange = item.Item6.Count>=2 ? item.Item6.First()+"-"+item.Item6.Last() : item.Item6[0];
                 ed.SetCellValue("Sheet1", index, 2, strnumrange);
                 double totalmeter = 0.0;
-                foreach (var fi in item.Item3)
+                foreach (var fi in item.Item5)
                 {
                     totalmeter += fi;
                 }
@@ -152,20 +168,22 @@ namespace Arrange
             int nCount = Config.Settings.lstFaceInfo.Count;
             for (int i = 0; i < nCount; i++)
             {
-                FacePathTuples.Add(new Tuple<string, List<string>,List<float>, List<string>>(Config.Settings.lstFaceInfo[i].FaceName, new List<string>(),new List<float>(), new List<string>()));
+                // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
+                FacePathTuples.Add(new Tuple<string,string, List<string>, List<string>,List<float>, List<string>>(Config.Settings.lstFaceInfo[i].FaceName,Config.Settings.lstFaceInfo[i].Index.ToString()+"#", new List<string>(), new List<string>(),new List<float>(), new List<string>()));
             }
 
             nCount = 0;
             foreach (var f in files)
             {
-                FileInfo fi;
-                if (ParseFileName(Path.GetFileNameWithoutExtension(f), out fi))
+                FileInfo fi;string regname;
+                if (ParseFileName(Path.GetFileNameWithoutExtension(f), out fi, out regname))
                 {
-                    var res = FacePathTuples.Where(s => s.Item1 == fi.Facename);
+                    var res = FacePathTuples.Where(s => s.Item2 == fi.Indexname);
                     if (res.Count() != 0)
                     {
-                        res.ElementAt(0).Item2.Add(f);
-                        res.ElementAt(0).Item3.Add(fi.Meter);
+                        res.ElementAt(0).Item3.Add(regname);
+                        res.ElementAt(0).Item4.Add(f);
+                        res.ElementAt(0).Item5.Add(fi.Meter);
                         nCount++;
                     }
                     else
@@ -186,13 +204,12 @@ namespace Arrange
             foreach (var item in FacePathTuples)
             {
                 int index = 0;
-                foreach (var f in item.Item2)
+                foreach (var f in item.Item4)
                 {
                     string extra = "图" + totalindex.ToString();
-                    string newname = extra + "-" + Path.GetFileName(f);
+                    string newname = extra + "-" + item.Item3[index]+Path.GetExtension(f);
                     Rename(f, newname);
-                    //item.Item2[index] = Path.GetDirectoryName(f) + "\\" + newname;
-                    item.Item4.Add(extra);
+                    item.Item6.Add(extra);
                     index++;
                     totalindex++;
                 }
@@ -205,6 +222,12 @@ namespace Arrange
 
         private bool Rename(string oldname, string newname)
         {
+            if (Path.GetFileName(oldname) == newname)
+            {
+                Log("重命名 " + Path.GetFileName(oldname) + " 为 " + Path.GetFileName(newname));
+                return true;
+            }
+                
 
             Computer my = new Computer();
 
