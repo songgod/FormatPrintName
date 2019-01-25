@@ -46,6 +46,8 @@ namespace ArrangeSample
         public string ExcelUrl1 { get; set; }
         public string ExcelUrl2 { get; set; }
 
+        public int StartIndex { get; set; }
+
         private void GetAllFiles(string dir, ref List<string> files)
         {
             var rfiles = Directory.GetFiles(dir);
@@ -116,8 +118,9 @@ namespace ArrangeSample
             return true;
         }
 
-        public void Process()
+        public void Process(int startindex)
         {
+            StartIndex = startindex;
             Log("查找文件...");
             List<string> files = new List<string>();
             GetAllFiles(Url, ref files);
@@ -130,7 +133,7 @@ namespace ArrangeSample
             Log("查找小样文件...");
 
             List<FileInfo> fileinfos = new List<FileInfo>();
-            int totalindex = 1;
+            int totalindex = StartIndex;
             foreach (var f in files)
             {
                 FileInfo fi;
@@ -217,8 +220,9 @@ namespace ArrangeSample
                 ed.Create();
                 int index = 1;
 
-                ed.SetCellValue("Sheet1", index, 1, "面料名称");
-                ed.SetCellValue("Sheet1", index, 2, "个数");
+                ed.SetCellValue("Sheet1", index, 1, "面料编号");
+                ed.SetCellValue("Sheet1", index, 2, "面料名称");
+                ed.SetCellValue("Sheet1", index, 3, "个数");
                 index++;
 
 
@@ -228,7 +232,8 @@ namespace ArrangeSample
                     if (item.Item3.Count == 0)
                         continue;
 
-                    ed.SetCellValue("Sheet1", index, 1, item.Item2);
+                    ed.SetCellValue("Sheet1", index, 1, item.Item1);
+                    ed.SetCellValue("Sheet1", index, 2, item.Item2);
 
                     int totalcount = 0;
                     foreach (var fn in item.Item3)
@@ -236,7 +241,7 @@ namespace ArrangeSample
                         totalcount += fn;
                     }
 
-                    ed.SetCellValue("Sheet1", index, 2, totalcount);
+                    ed.SetCellValue("Sheet1", index, 3, totalcount);
 
                     index++;
                 }

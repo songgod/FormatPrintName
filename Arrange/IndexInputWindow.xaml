@@ -1,0 +1,28 @@
+﻿<Window x:Class="Arrange.IndexInputWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arrange"
+        mc:Ignorable="d"
+        Title="输入序号" Height="100" Width="250" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" BorderBrush="Black" BorderThickness="1">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0">
+            <TextBox.Text>
+                <Binding Path="Index">
+                    <Binding.ValidationRules>
+                        <local:IntValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <StackPanel Orientation="Horizontal" Margin="1" Grid.Row="1" HorizontalAlignment="Right">
+            <Button Content="确定" Width="100" Click="Button_Click" HorizontalAlignment="Center" Margin="2"/>
+            <Button Content="取消" Width="100" x:Name="cancel" Click="cancel_Click" HorizontalAlignment="Right" Margin="2"/>
+        </StackPanel>
+    </Grid>
+</Window>

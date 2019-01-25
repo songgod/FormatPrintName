@@ -44,7 +44,9 @@ namespace Arrange
 
         public string ExcelUrl { get; set; }
 
-       
+        public int StartIndex { get; set; }
+
+
         // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
         public List<Tuple<string,string, List<string>, List<string>,List<float>,List<string>>> FacePathTuples { get; set; }
 
@@ -112,8 +114,9 @@ namespace Arrange
                 OnLog.Invoke(str);
         }
 
-        public void Process()
+        public void Process(int startindex)
         {
+            StartIndex = startindex;
             if (!ProcessRename())
                 return;
             ProcessExcel();
@@ -126,24 +129,26 @@ namespace Arrange
             ed.Create();
             int index = 1;
 
-            ed.SetCellValue("Sheet1", index, 1, "面料名称");
-            ed.SetCellValue("Sheet1", index, 2, "图序号范围");
-            ed.SetCellValue("Sheet1", index, 3, "总米数");
+            ed.SetCellValue("Sheet1", index, 1, "图序号范围");
+            ed.SetCellValue("Sheet1", index, 2, "面料编号");
+            ed.SetCellValue("Sheet1", index, 3, "面料名称");
+            ed.SetCellValue("Sheet1", index, 4, "总米数");
             index++;
             // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
             foreach (var item in FacePathTuples)
             {
                 if (item.Item3.Count == 0)
                     continue;
-                ed.SetCellValue("Sheet1", index, 1, item.Item1);
-                string strnumrange = item.Item6.Count>=2 ? item.Item6.First()+"-"+item.Item6.Last() : item.Item6[0];
-                ed.SetCellValue("Sheet1", index, 2, strnumrange);
+                string strnumrange = item.Item6.Count >= 2 ? item.Item6.First() + "-" + item.Item6.Last() : item.Item6[0];
+                ed.SetCellValue("Sheet1", index, 1, strnumrange);
                 double totalmeter = 0.0;
                 foreach (var fi in item.Item5)
                 {
                     totalmeter += fi;
                 }
-                ed.SetCellValue("Sheet1", index, 3, totalmeter);
+                ed.SetCellValue("Sheet1", index, 2, item.Item2);
+                ed.SetCellValue("Sheet1", index, 3, item.Item1);
+                ed.SetCellValue("Sheet1", index, 4, totalmeter);
                 index++;
             }
             string excelname = Url.Substring(Url.LastIndexOf('\\')+1);
@@ -200,7 +205,7 @@ namespace Arrange
             }
 
             Log("找到" + nCount.ToString() + "个米样文件，开始重命名...");
-            int totalindex = 1;
+            int totalindex = StartIndex;
             foreach (var item in FacePathTuples)
             {
                 int index = 0;

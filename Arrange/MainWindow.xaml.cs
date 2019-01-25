@@ -53,7 +53,17 @@ namespace Arrange
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            Processor.Instance.Process();
+            IndexInputWindow w = new IndexInputWindow() { Owner = this };
+            w.ShowInTaskbar = false;
+            var v = w.ShowDialog();
+            if(v.HasValue && v.Value==true)
+            {
+                Processor.Instance.Process(w.Index);
+            }
+            else
+            {
+                this.Close();
+            }
         }
     }
 }
