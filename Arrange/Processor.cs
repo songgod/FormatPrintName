@@ -46,6 +46,8 @@ namespace Arrange
 
         public int StartIndex { get; set; }
 
+        public float Ratio { get; set; }
+
 
         // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
         public List<Tuple<string,string, List<string>, List<string>,List<float>,List<string>>> FacePathTuples { get; set; }
@@ -114,9 +116,10 @@ namespace Arrange
                 OnLog.Invoke(str);
         }
 
-        public void Process(int startindex)
+        public void Process(int startindex, float ratio)
         {
             StartIndex = startindex;
+            Ratio = ratio;
             if (!ProcessRename())
                 return;
             ProcessExcel();
@@ -133,6 +136,7 @@ namespace Arrange
             ed.SetCellValue("Sheet1", index, 2, "面料编号");
             ed.SetCellValue("Sheet1", index, 3, "面料名称");
             ed.SetCellValue("Sheet1", index, 4, "总米数");
+            ed.SetCellValue("Sheet1", index, 5, "实际米数");
             index++;
             // 面料名称、面料编号、规则名列表、文件路径列表、米数列表、图号列表
             foreach (var item in FacePathTuples)
@@ -149,6 +153,7 @@ namespace Arrange
                 ed.SetCellValue("Sheet1", index, 2, item.Item2);
                 ed.SetCellValue("Sheet1", index, 3, item.Item1);
                 ed.SetCellValue("Sheet1", index, 4, totalmeter);
+                ed.SetCellValue("Sheet1", index, 5, item.Item5.Count * Ratio + totalmeter);
                 index++;
             }
             string excelname = Url.Substring(Url.LastIndexOf('\\')+1);
@@ -156,6 +161,39 @@ namespace Arrange
             ed.SaveAs(ExcelUrl);
             ed.Close();
             Log("导出Excel文件结束");
+
+            if (MessageBox.Show("是否更新库存表?", "更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                bool b0 = System.IO.File.Exists(ExcelUrl);
+                if(!b0)
+                {
+                    Log("找不到样表文件"+ExcelUrl+"更新失败");
+                    return;
+                }
+                string stockexcel = Url + "\\库存.xlsx";
+                bool b2 = System.IO.File.Exists(stockexcel);
+                if (!b2)
+                {
+                    Log("找不到库存表文件" + stockexcel + "更新失败");
+                    return;
+                }
+
+                try
+                {
+                    if (!CreateStock.Create(stockexcel, ExcelUrl, ""))
+                    {
+                        Log("更新库存表失败！请检查文件内容有效性！");
+                    }
+                    else
+                        Log("更新库存表成功！");
+                }
+                catch (Exception)
+                {
+
+                    Log("更新库存表失败！请检查文件内容有效性！");
+                }
+
+            }
         }
 
         private bool ProcessRename()

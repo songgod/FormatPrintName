@@ -46,6 +46,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateStock.cs" />
     <Compile Include="ExcelEdit.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

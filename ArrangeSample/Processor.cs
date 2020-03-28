@@ -48,6 +48,8 @@ namespace ArrangeSample
 
         public int StartIndex { get; set; }
 
+        public float Ratio { get; set; }
+
         private void GetAllFiles(string dir, ref List<string> files)
         {
             var rfiles = Directory.GetFiles(dir);
@@ -118,9 +120,10 @@ namespace ArrangeSample
             return true;
         }
 
-        public void Process(int startindex)
+        public void Process(int startindex,float ratio)
         {
             StartIndex = startindex;
+            Ratio = ratio;
             Log("查找文件...");
             List<string> files = new List<string>();
             GetAllFiles(Url, ref files);
@@ -223,6 +226,7 @@ namespace ArrangeSample
                 ed.SetCellValue("Sheet1", index, 1, "面料编号");
                 ed.SetCellValue("Sheet1", index, 2, "面料名称");
                 ed.SetCellValue("Sheet1", index, 3, "个数");
+                ed.SetCellValue("Sheet1", index, 4, "实际米数");
                 index++;
 
 
@@ -242,7 +246,7 @@ namespace ArrangeSample
                     }
 
                     ed.SetCellValue("Sheet1", index, 3, totalcount);
-
+                    ed.SetCellValue("Sheet1", index, 4, totalcount*Ratio);
                     index++;
                 }
                 string excelname = Url.Substring(Url.LastIndexOf('\\') + 1);
@@ -252,6 +256,42 @@ namespace ArrangeSample
             }
 
             Log("导出Excel文件结束");
+
+            {
+                if (MessageBox.Show("是否更新库存表?", "更新", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    bool b0 = System.IO.File.Exists(ExcelUrl2);
+                    if (!b0)
+                    {
+                        Log("找不到小样表文件" + ExcelUrl2 + "，更新失败");
+                        return;
+                    }
+
+                    string stockexcel = Url + "\\库存.xlsx";
+                    bool b2 = System.IO.File.Exists(stockexcel);
+                    if (!b2)
+                    {
+                        Log("找不到库存表文件" + stockexcel + "更新失败");
+                        return;
+                    }
+
+                    try
+                    {
+                        if (!CreateStock.Create(stockexcel, "", ExcelUrl2))
+                        {
+                            Log("更新库存表失败！请检查文件内容有效性！");
+                        }
+                        else
+                            Log("更新库存表成功！");
+                    }
+                    catch (Exception)
+                    {
+
+                        Log("更新库存表失败！请检查文件内容有效性！");
+                    }
+ 
+                }
+            }
         }
 
         private bool Rename(string oldname, string newname)

@@ -29,6 +29,21 @@ namespace Arrange
         }
     }
 
+    public class FloatValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            float d = 0;
+            if (float.TryParse(value.ToString(), out d))
+            {
+                if (d > 0)
+                    return new ValidationResult(true, null);
+            }
+
+            return new ValidationResult(false, "Validation Failed");
+        }
+    }
+
     /// <summary>
     /// IndexInputWindow.xaml 的交互逻辑
     /// </summary>
@@ -51,6 +66,20 @@ namespace Arrange
         // Using a DependencyProperty as the backing store for Index.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IndexProperty =
             DependencyProperty.Register("Index", typeof(int), typeof(IndexInputWindow), new PropertyMetadata(0));
+
+
+
+        public float Ratio
+        {
+            get { return (float)GetValue(RatioProperty); }
+            set { SetValue(RatioProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Ratio.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RatioProperty =
+            DependencyProperty.Register("Ratio", typeof(float), typeof(IndexInputWindow), new PropertyMetadata(0.1f));
+
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

@@ -58,7 +58,7 @@ namespace Arrange
             var v = w.ShowDialog();
             if(v.HasValue && v.Value==true)
             {
-                Processor.Instance.Process(w.Index);
+                Processor.Instance.Process(w.Index,w.Ratio);
             }
             else
             {

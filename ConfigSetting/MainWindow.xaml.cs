@@ -41,7 +41,20 @@ namespace ConfigSetting
     {
         public MainWindow()
         {
+        //    try
+        //    {
+        //        CreateStock.Create(@"E:\WeiYun\GPT\private\doc\米样\软件升级\原软件生成表\库存.xls",
+        //@"E:\WeiYun\GPT\private\doc\米样\软件升级\原软件生成表\2-22.xlsx",
+        //@"E:\WeiYun\GPT\private\doc\米样\软件升级\原软件生成表\小样2-222.xlsx");
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+
             InitializeComponent();
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

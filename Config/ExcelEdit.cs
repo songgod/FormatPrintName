@@ -76,10 +76,27 @@ namespace Config
         {
             ws.Cells[x, y] = value;
         }
+
+        public object GetCellValue(Microsoft.Office.Interop.Excel.Worksheet ws, int x, int y)
+        //ws：要设值的工作表     X行Y列     value   值
+        {
+           return ws.Cells[x, y].Value;
+        }
+
         public void SetCellValue(string ws, int x, int y, object value)
         //ws：要设值的工作表的名称 X行Y列 value 值
         {
             GetSheet(ws).Cells[x, y] = value;
+        }
+
+        public object GetCellValue(string ws, int x, int y)
+        {
+            return GetSheet(ws).Cells[x, y];
+        }
+
+        public void SetCellColor(Microsoft.Office.Interop.Excel.Worksheet ws, int x, int y, int color)
+        { 
+            ws.Range[ws.Cells[x, y], ws.Cells[x, y]].Interior.ColorIndex = color;
         }
 
         public void SetCellProperty(Microsoft.Office.Interop.Excel.Worksheet ws, int Startx, int Starty, int Endx, int Endy, int size, string name, Microsoft.Office.Interop.Excel.Constants color, Microsoft.Office.Interop.Excel.Constants HorizontalAlignment)

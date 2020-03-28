@@ -20,8 +20,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="24"/>
             </Grid.ColumnDefinitions>
-            <ListView x:Name="lstview" Grid.Column="0"
-                      ItemsSource="{x:Static cfg:Settings.lstFaceInfo}"
+            <ListView x:Name="lstview" Grid.Column="0" ItemsSource="{x:Static cfg:Settings.lstFaceInfo}"
                       VirtualizingStackPanel.IsVirtualizing="True" 
                         VirtualizingStackPanel.VirtualizationMode="Recycling">
                 <ListView.View>

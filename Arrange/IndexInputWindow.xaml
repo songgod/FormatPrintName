@@ -5,13 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Arrange"
         mc:Ignorable="d"
-        Title="输入序号" Height="100" Width="250" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" BorderBrush="Black" BorderThickness="1">
+        Title="输入参数" Height="100" Width="250" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" BorderBrush="Black" BorderThickness="1">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="开始序列号:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="0" Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Index">
                     <Binding.ValidationRules>
@@ -20,7 +26,17 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <StackPanel Orientation="Horizontal" Margin="1" Grid.Row="1" HorizontalAlignment="Right">
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="计算比例:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="1">
+            <TextBox.Text>
+                <Binding Path="Ratio">
+                    <Binding.ValidationRules>
+                        <local:FloatValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <StackPanel Orientation="Horizontal" Margin="1" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right">
             <Button Content="确定" Width="100" Click="Button_Click" HorizontalAlignment="Center" Margin="2"/>
             <Button Content="取消" Width="100" x:Name="cancel" Click="cancel_Click" HorizontalAlignment="Right" Margin="2"/>
         </StackPanel>
