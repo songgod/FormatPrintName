@@ -46,6 +46,7 @@ namespace Config
                         allmeters[sid] = dam;
                     index++;
                 }
+                ee0.Close();
             }
 
             if(System.IO.File.Exists(sheetsample))
@@ -74,6 +75,7 @@ namespace Config
                         allmeters[sid] = dam;
                     index++;
                 }
+                ee1.Close();
             }
 
             {
