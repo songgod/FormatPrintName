@@ -249,7 +249,7 @@ namespace Arrange
                 int index = 0;
                 foreach (var f in item.Item4)
                 {
-                    string extra = "图" + totalindex.ToString();
+                    string extra = totalindex.ToString() + "图";
                     string newname = extra + "-" + item.Item3[index]+Path.GetExtension(f);
                     Rename(f, newname);
                     item.Item6.Add(extra);
