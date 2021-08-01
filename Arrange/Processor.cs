@@ -75,7 +75,7 @@ namespace Arrange
             {
                 if(strs.Count()==6)
                 {
-                    string strtu = strs[0].Substring(0, 1);
+                    string strtu = strs[0].Substring(strs[0].Count()-1, 1);
                     if (strtu == "图")
                     {
                         int sindex = filename.IndexOf('-');
